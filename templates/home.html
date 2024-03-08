@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Welcome to the Home Page</h2>
+    <p>Hello, {{ session.user_id }}! You are logged in.</p>
+    <p style="text-align: right;"><a href="/logout">Logout</a></p>
+    <style>
+        /* Custom CSS to style the buttons */
+        .custom-button {
+          background-color: rgb(1, 9, 12);
+          width: 100%;
+          text-align: center;
+        }
+    </style>
+
+      <table>
+          <tr>
+              <!-- <td>
+                  <div class="row">
+                      <div class="col-md-12">
+                        <form action="/view_data" method="GET">
+                            <button type="submit" class="btn btn-primary">View Dataset</button>
+                        </form>
+                      </div>
+                  </div>
+              </td> -->
+              <!-- <td>
+                  <div class="row">
+                      <div class="col-md-12">
+                          <form action="/preprocess" method="POST">
+                              <button type="submit" class="btn custom-button">Preprocess Data</button>
+                          </form>
+                      </div>
+                  </div>
+              </td> -->
+              <!-- <td>
+                  <div class="row">
+                      <div class="col-md-12">
+                          <form action="/train_model" method="POST">
+                              <button type="submit" class="btn custom-button">Train Model</button>
+                          </form>
+                      </div>
+                  </div>
+              </td> -->
+
+              
+              <!-- <td>
+                  <div class="row">
+                      <div class="col-md-12">
+                          <form action="/apply_algorithm" method="POST">
+                              <button type="submit" class="btn custom-button">Apply Algorithm</button>
+                          </form>
+                        </form>
+                      </div>
+                  </div>
+              </td> -->
+              <td>               
+                        
+                 <button onclick="toggleForm()">Drug Recommended</button>                    
+                 
+              </td>
+
+              <div class="container">
+              <div id="recommendationForm" style="display:none;">
+                <form action="/recommend_drugs" method="POST">
+                    <label for="medical_condition">Enter a medical condition:</label>
+                    <input type="text" id="medical_condition" name="medical_condition">
+                    <button type="submit">Recommend Drugs</button>
+                </form>
+            </div>
+            
+        </div>
+              <td>
+                <div class="row">
+                    <button onclick="toggleMedicationPlanForm()">Personalized Medication Plans</button>
+
+                    <!-- Medication Plan Form (initially hidden) -->
+                    <div id="medicationPlanForm" style="display:none;">
+                        <form action="{{ url_for('predict_drug') }}" method="post">
+                            <label for="medical_condition">Medication Plans:</label>
+                            <input type="text" id="medical_condition" name="medical_condition" placeholder="Enter medical condition">
+                            <button type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </td>
+
+          </tr>
+
+          
+      </table>
+      {% if session.plot_img %}
+      <img src="data:image/png;base64, {{ session.plot_img }}" alt="Model Performance">
+  {% endif %}
+
+
+      <div class="mt-4">
+        <!-- <h2>Data Set Loading...</h2> -->
+        {% if data_html %}
+            {{ data_html | safe }}
+        {% endif %}
+    </div>
+
+    <div>
+        <!-- Add a section to display preprocessed data -->
+    <!-- {% if 'preprocessed_data' in session %}
+    <h3>Preprocessed Data</h3>
+    {{ session['preprocessed_data'] | safe }}
+    {% endif %} -->
+    </div>
+
+    
+
+    <div>
+        {% if 'trained_model' in session %}
+            <div class="alert alert-success" role="alert">
+                {{ session['trained_model'] }}
+            </div>
+        {% endif %}
+    </div>
+    {% if session.plot_img %}
+    <img src="data:image/png;base64, {{ session.plot_img }}" alt="Model Performance">
+{% endif %}
+
+{% if session['model_info'] %}
+    <div>
+        <h3>Model Information:</h3>
+        <p>{{ session['model_info'] }}</p>
+    </div>
+{% endif %}
+
+{% if session.get('model_info') %}
+            <div>
+                <h3>{{ session.get('model_info') }}</h3>
+                <img src="{{ url_for('static', filename='accuracy_graph.png') }}" alt="Accuracy Graph">
+            </div>
+{% endif %}
+
+
+
+<div class="container">
+    
+
+    {% if recommended_drugs %}
+        <table class="table table-bordered" style="text-align: center; border: 1px;">
+            <h1>Recommended Drugs for "{{ condition }}"</h1>
+            <thead>
+                <tr>
+                    <!-- <th>Condition</th> -->
+                    <th>Drug Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for drug in recommended_drugs %}
+                    <tr>
+                       <!--  <td>{{ drug[0] }}</td>  First element is 'condition' -->
+                        <td>{{ drug[1] }}</td>  <!-- Second element is 'drugName' -->
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+
+
+
+
+        </table>
+
+
+
+    {% else %}
+        <!-- <p>No recommendations available for the given medical condition.</p> -->
+    {% endif %}
+
+{% endblock %}

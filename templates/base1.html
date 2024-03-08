@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Flask App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header style="background-color: #044d61;">
+        <h1 style="color: rgb(255, 255, 255);">AI Driven Drug Interaction Prediction System</h1>
+    </header>
+    
+    <div class="content1">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <script>
+                    alert("{{ messages[0] }}");
+                </script>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+    <footer>
+         {{ current_year }} 
+    </footer>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drug Recommendations</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Recommended Drugs for "{{ condition }}"</h1>
+
+        {% if recommended_drugs %}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <!-- <th>Condition</th> -->
+                        <th>Drug Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for drug in recommended_drugs %}
+                        <tr>
+                           <!--  <td>{{ drug[0] }}</td>  First element is 'condition' -->
+                            <td>{{ drug[1] }}</td>  <!-- Second element is 'drugName' -->
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No recommendations available for the given medical condition.</p>
+        {% endif %}
+
+        <a href="{{ url_for('home') }}" class="btn btn-primary">Back to Home</a>
+    </div>
+</body>
+</html>
